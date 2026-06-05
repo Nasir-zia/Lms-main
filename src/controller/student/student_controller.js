@@ -1,21 +1,64 @@
+// controllers/student/createStudent.controller.js
+
 import Student from "../../model/Student.schema.js";
 
-
-//  Now we will create the controller of the student which will handle all the logic related to the student
-
 const create_student = async (req, res) => {
-    const { Profile_picture, degree, semester, Bio, course, certificate } = req.body;
-    if(!Profile_picture ,degree , semester , Bio , course , certificate){
-        alert ("Please fill all the fields ")
-    }
-    try {
-        const student = new student ({
-            
-        })
-        
-    } catch (error) {
-        
-    }
-}
+  try {
+    const { Profile_picture, degree, semester, Bio, course, certificate } =
+      req.body;
 
-export default  create_student;
+    // Validation
+    if (
+      !Profile_picture ||
+      !degree ||
+      !semester ||
+      !Bio ||
+      !course ||
+      !certificate
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Please fill all required fields",
+      });
+    }
+
+    // Check existing student
+    const existingStudent = await Student.findOne({
+      Profile_picture,
+      email,
+    });
+
+    if (existingStudent) {
+      return res.status(409).json({
+        success: false,
+        message: "Student already exists",
+      });
+    }
+
+    // Create student
+    const student = await Student.create({
+      Profile_picture,
+      degree,
+      semester,
+      Bio,
+      course,
+      certificate,
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "Student created successfully",
+      data: student,
+    });
+  } catch (error) {
+    console.error("Create Student Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Error creating student",
+      error: error.message,
+    });
+  }
+};
+
+export default create_student;
