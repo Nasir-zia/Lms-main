@@ -4,6 +4,9 @@ dotenv.config();
 import app from './app.js';
 import connectDb from './src/config/dbconnection.js';
 import { database_validation_handling}  from './src/config/errorhandling.js';
+import dns from 'dns';
+
+
 
 
 

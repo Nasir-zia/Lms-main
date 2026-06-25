@@ -1,6 +1,6 @@
 // controllers/student/createStudent.controller.js
 
-import Student from "../../model/Student.schema.js";
+import Student from "../../model/User_Management/Student.schema.js";
 
 const create_student = async (req, res) => {
   try {
