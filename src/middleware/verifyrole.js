@@ -1,28 +1,28 @@
 import jwt from 'jsonwebtoken';
 
 
-const verifyRole = (req,res , next) => {
+const verifyRole = (req, res, next) => {
   let token;
   let authHeader = req.headers.authorization || req.headers.Authorization; 
-  if(authHeader && authHeader.startsWith("Bearer")){
+  
+  if (authHeader && authHeader.startsWith("Bearer")) {
     token = authHeader.split(" ")[1];
 
-    if(!token){
-      return res.status(401).json({message : "Unauthorized , no token"})
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized, no token" });
     }
+    
     try {
-      
       const decode = jwt.verify(token, process.env.JWT_SECRET);
       req.user = decode;
-      console.log("decoded user info from verifyRole middleware" , decode);
+      console.log("decoded user info from verifyRole middleware:", decode);
       next();
     } catch (error) {
-      return res.status(403).json({message : "forbidden access"})
+      return res.status(403).json({ message: "Forbidden access" });
     }
-
-
-
+  } else {
+    return res.status(401).json({ message: "Unauthorized, missing or invalid token" });
   }
-}
+};
 
 export default verifyRole;

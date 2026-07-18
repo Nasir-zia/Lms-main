@@ -1,17 +1,23 @@
 import mongoose from "mongoose";
 
 const studentScema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    unique: true,
+  },
   Profile_picture: {
     type: String,
-    required: true,
+    required: false,
   },
   degree: {
     type: String,
-    required: true,
+    required: false,
   },
   semester: {
     type: String,
-    required: true,
+    required: false,
   },
   Bio: {
     type: String,
@@ -20,8 +26,19 @@ const studentScema = new mongoose.Schema({
   course: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Course",
-    required: true,
+    required: false,
   },
+  enrolledCourses: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Course",
+  }],
+  progress: [{
+    courseId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Course",
+    },
+    completedLessons: [String],
+  }],
   certificate: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Certificate",
