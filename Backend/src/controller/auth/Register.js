@@ -1,6 +1,6 @@
 import User from "../../model/user.schema.js";
 import bcrypt from "bcrypt";
-import { addEmailJob } from "../../queues/emailQueue.js";
+import transporter from "../../utils/sendemail.js";
 
 const register_user = async (req, res) => {
   try {
@@ -31,8 +31,9 @@ const register_user = async (req, res) => {
 
     await newUser.save();
 
-    // Send OTP via background task queue (with automatic direct sending fallback if Redis is offline)
-    await addEmailJob({
+    // Send OTP via SMTP transporter directly
+    await transporter.sendMail({
+      from: process.env.SMTP_USER,
       to: email,
       subject: "Welcome to the lms please verify your account",
       text: `Hello ${username}, your OTP is ${otpCode}`,
